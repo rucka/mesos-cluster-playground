@@ -34,13 +34,17 @@ echo 'docker,mesos' > containerizers && sudo cp containerizers /etc/mesos-slave/
 echo '5mins' > executor_registration_timeout && sudo cp executor_registration_timeout /etc/mesos-slave/executor_registration_timeout && rm executor_registration_timeout
 cp /vagrant/.dockercfg /home/vagrant/config/.dockercfg #use mesos way to inject docker config. see documentation
 
-#install haproxy
-#echo deb http://archive.ubuntu.com/ubuntu trusty-backports main universe | \
-#sudo tee /etc/apt/sources.list.d/backports.list
-#apt-get update
-#apt-get install haproxy -t trusty-backports
-
 #start slave
 sudo service mesos-slave restart
+
+export MASTER=$(mesos-resolve `cat /etc/mesos/zk` 2>/dev/null)
+export MARATHON=$(echo $MASTER | sed 's/5050/8080/g')
+
+#install haproxy (bamboo https://github.com/QubitProducts/bamboo ??) #TODO: move haproxy to docker...
+sudo apt-get install haproxy
+wget https://raw.githubusercontent.com/mesosphere/marathon/master/bin/haproxy-marathon-bridge
+chmod 755 haproxy-marathon-bridge
+./haproxy-marathon-bridge install_haproxy_system $MARATHON
+
 
 echo "slave setup completed!"

@@ -1,0 +1,19 @@
+{
+  "id": "haproxy-sample-server",
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "image": "node",
+      "network":"HOST"
+    }
+  },
+  "ports": [3000],
+  "instances": 1,
+  "constraints": [["hostname", "CLUSTER", "192.168.43.11"]],
+  "cpus": 0.01,
+  "mem": 64,
+  "uris": [
+      "http://192.168.43.10:8080/v2/artifacts/hellonode.tar.gz"
+  ],
+  "cmd": "INSTANCE_NAME=$MESOS_TASK_ID HTTP_PORT=$PORT node $MESOS_SANDBOX/hellonode/index.js"
+}

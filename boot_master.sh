@@ -49,18 +49,21 @@ fi
 
 #TODO: install chronos from marathon app script
 
-#install haproxy
-#echo deb http://archive.ubuntu.com/ubuntu trusty-backports main universe | \
-#sudo tee /etc/apt/sources.list.d/backports.list
-#apt-get update
-#apt-get install haproxy -t trusty-backports
-
 #start services
 sudo service zookeeper restart
 sudo service mesos-slave stop
 sudo sh -c "echo manual > /etc/init/mesos-slave.override"
 sudo service mesos-master restart
 sudo service marathon restart
+
+export MASTER=$(mesos-resolve `cat /etc/mesos/zk` 2>/dev/null)
+export MARATHON=$(echo $MASTER | sed 's/5050/8080/g')
+
+#install haproxy (bamboo https://github.com/QubitProducts/bamboo ??) #TODO: move haproxy to docker...
+sudo apt-get install haproxy
+wget https://raw.githubusercontent.com/mesosphere/marathon/master/bin/haproxy-marathon-bridge
+chmod 755 haproxy-marathon-bridge
+./haproxy-marathon-bridge install_haproxy_system $MARATHON
 
 
 echo "master setup completed!"

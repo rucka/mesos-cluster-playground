@@ -1,6 +1,5 @@
 var http = require('http')
 var port = process.env.HTTP_PORT || 3001;
-var name = process.env.INSTANCE_NAME;
 var stub_host = process.env.STUB_HOST || 'localhost';
 var stub_port = process.env.STUB_PORT || 3000;
 

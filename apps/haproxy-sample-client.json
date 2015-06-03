@@ -1,0 +1,19 @@
+{
+  "id": "haproxy-sample-client",
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "image": "node",
+      "network":"HOST"
+    }
+  },
+  "ports": [3001],
+  "instances": 1,
+  "constraints": [["hostname", "CLUSTER", "192.168.43.12"]],
+  "cpus": 0.01,
+  "mem": 64,
+  "uris": [
+      "http://192.168.43.10:8080/v2/artifacts/hellobridge.tar.gz"
+  ],
+  "cmd": "HTTP_PORT=$PORT STUB_PORT=3000 node $MESOS_SANDBOX/hellobridge/index.js"
+}
