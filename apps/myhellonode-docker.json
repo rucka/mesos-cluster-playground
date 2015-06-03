@@ -1,0 +1,16 @@
+{
+  "id": "myhellonode-docker",
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "image": "node"
+    }
+  },
+  "instances": 1,
+  "cpus": 0.01,
+  "mem": 64,
+  "uris": [
+      "http://192.168.43.10:8080/v2/artifacts/hellonode.tar.gz"
+  ],
+  "cmd": "INSTANCE_NAME=$MESOS_TASK_ID HTTP_PORT=$PORT node $MESOS_SANDBOX/hellonode/index.js"
+}

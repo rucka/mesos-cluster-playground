@@ -1,0 +1,16 @@
+{
+  "id": "git-hellonode-docker",
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "image": "node"
+    }
+  },
+  "instances": 1,
+  "cpus": 0.2,
+  "mem": 128,
+  "uris": [
+      "https://raw.githubusercontent.com/olegp/hello/master/index.js"
+  ],
+  "cmd": "HTTP_PORT=$PORT node $MESOS_SANDBOX/index.js"
+}
