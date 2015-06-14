@@ -31,8 +31,10 @@ sudo cp /etc/mesos-slave/ip /etc/mesos-slave/hostname
 #DOCKER LAST
 wget -qO- https://get.docker.com/ | sh
 echo 'docker,mesos' > containerizers && sudo cp containerizers /etc/mesos-slave/containerizers && rm containerizers
-echo '5mins' > executor_registration_timeout && sudo cp executor_registration_timeout /etc/mesos-slave/executor_registration_timeout && rm executor_registration_timeout
-cp /vagrant/.dockercfg /home/vagrant/config/.dockercfg #use mesos way to inject docker config. see documentation
+echo '40mins' > executor_registration_timeout && sudo cp executor_registration_timeout /etc/mesos-slave/executor_registration_timeout && rm executor_registration_timeout
+if [ -f /vagrant/config/.dockercfg ]; then
+  cp /vagrant/config/.dockercfg /home/vagrant/config/.dockercfg #use mesos way to inject docker config. see documentation
+fi
 
 #start slave
 sudo service mesos-slave restart

@@ -30,21 +30,22 @@ sudo sed -i 's/mesos/marathon/g' /etc/marathon/conf/zk
 #DOCKER LAST
 wget -qO- https://get.docker.com/ | sh
 echo 'docker,mesos' > containerizers && sudo cp containerizers /etc/mesos-slave/containerizers && rm containerizers
-echo '5mins' > executor_registration_timeout && sudo cp executor_registration_timeout /etc/mesos-slave/executor_registration_timeout && rm executor_registration_timeout
-cp /vagrant/.dockercfg /home/vagrant/config/.dockercfg #use mesos way to inject docker config. see documentation
+echo '40mins' > executor_registration_timeout && sudo cp executor_registration_timeout /etc/mesos-slave/executor_registration_timeout && rm executor_registration_timeout
+if [ -f /vagrant/config/.dockercfg ]; then
+  cp /vagrant/config/.dockercfg /home/vagrant/config/.dockercfg #use mesos way to inject docker config. see documentation
+fi
 
 #CREATE MARATHON ARTIFACT_STORE AND PUT .dockercfg into
 sudo mkdir -p /etc/marathon/store
 sudo cp /vagrant/config/artifact_store /etc/marathon/conf/artifact_store
 sudo service marathon restart
-if [ -f /vagrant/config/.dockercfg ] then
-  cp /vagrant/config/.dockercfg ~/.dockercfg
+if [ -f /vagrant/config/.dockercfg ]; then
+  cp /vagrant/config/.dockercfg /home/vagrant/.dockercfg
   curl -F "name=file" -F "filename=.dockercfg" -F "file=@.dockercfg" http://192.168.43.10:8080/v2/artifacts
     #check -> curl http://192.168.43.10:8080/v2/artifacts/.dockercfg
 
     #REF .dockercfg like this:
     #  "uris": ["http://marathon-ip:8080/v2/artifacts/.dockercfg"]
-
 fi
 
 #TODO: install chronos from marathon app script
